@@ -104,3 +104,13 @@ I've attached an example file named **q_table.txt** that you can use instead to 
     $ cd your_project_folder/bin
     $ mv q_table.txt q_table.csv
 ```
+
+Tests
+=====
+
+You can execute the tests running the next command:
+
+```bash
+    $ cd your_project_folder
+    $ ./vendor/bin/phpunit --bootstrap vendor/autoload.php tests
+```

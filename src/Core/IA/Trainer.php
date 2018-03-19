@@ -7,7 +7,7 @@ use Jarenal\Core\Model\Game;
 class Trainer
 {
     private $qTablePath;
-    private $games = 800000;
+    private $games = 100000;
     private $gamma;
     private $player1 = 'O';
     private $player2 = 'X';

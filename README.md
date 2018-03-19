@@ -6,7 +6,14 @@ This is a testing purposes project. The target is create a TicTacToe game from s
 Setup
 =====
 
-Clone or download the project in a folder and then we have two options for to run the project:
+Clone or download the project in a folder and then install dependencies using composer:
+
+```bash
+    $ cd your_project_folder
+    $ composer install
+```
+
+For to run the project in a browser we have two options.
 
 Option 1: Using built-in PHP Web Server
 --------------------------------------

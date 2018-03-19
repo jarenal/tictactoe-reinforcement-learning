@@ -1,0 +1,113 @@
+body {
+    font-family: Verdana, sans-serif;
+    background-color: lightpink;
+}
+
+h1 {
+    text-align: center;
+}
+
+.board {
+    width: 458px;
+    height: 458px;
+    margin: 40px auto;
+}
+
+.square {
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+}
+
+.square.c1 {
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.square.c2 {
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.square.c3 {
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.square.c4 {
+    border-top: 2px solid white;
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.square.c5 {
+    border: 2px solid white;
+}
+
+.square.c6 {
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+.square.c7 {
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+}
+
+.square.c8 {
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    border-top: 2px solid white;
+}
+
+.square.c9 {
+    border-left: 2px solid white;
+    border-top: 2px solid white;
+}
+
+.player-O {
+    background: url('/images/players.png') 10px 10px no-repeat;
+    cursor: not-allowed;
+}
+
+.player-X {
+    background: url('/images/players.png') -150px 10px no-repeat;
+    cursor: not-allowed;
+}
+
+.toolbar-stats {
+    border: 1px solid #000;
+    background-color: white;
+    width: 456px;
+    height: auto;
+    margin: 30px auto;
+    overflow: hidden;
+}
+
+.toolbar-stats div {
+    border: 1px solid #000;
+    width: 140px;
+    height: 50%;
+    display: inline-block;
+    float: left;
+    text-align: center;
+    padding: 5px;
+}
+
+.stats-title {
+    background-color: #000;
+    color: #fff;
+}
+
+.toolbar {
+    border: 2px solid #000;
+    background-color: white;
+    width: 458px;
+    height: auto;
+    margin: 30px auto;
+    padding: 10px;
+}

@@ -1,0 +1,4 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteRule ^api/move$ /index.php?c=api&a=move&%{QUERY_STRING}
+RewriteRule ^$ /index.php?c=home&a=index&%{QUERY_STRING}

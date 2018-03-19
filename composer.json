@@ -1,0 +1,19 @@
+{
+    "name": "jarenal/mytictactoc",
+    "description": "Tic Tac Toc Game!",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jose Antonio",
+            "email": "jguidos@hotmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {"Jarenal\\": "src/", "Tests\\": "tests/"}
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6"
+    }
+}

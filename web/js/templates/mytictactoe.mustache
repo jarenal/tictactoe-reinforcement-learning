@@ -1,0 +1,31 @@
+<script id="mytictactoe" type="text/html">
+    <div class="toolbar-stats">
+        <div class="stats-title">You</div>
+        <div class="stats-title">Ties</div>
+        <div class="stats-title">CPU</div>
+        <div id="wins-counter">0</div>
+        <div id="ties-counter">0</div>
+        <div id="losts-counter">0</div>
+    </div>
+    <div class="board">
+        <div class="square c1" data-coords="0-0"></div>
+        <div class="square c2" data-coords="1-0"></div>
+        <div class="square c3" data-coords="2-0"></div>
+        <div class="square c4" data-coords="0-1"></div>
+        <div class="square c5" data-coords="1-1"></div>
+        <div class="square c6" data-coords="2-1"></div>
+        <div class="square c7" data-coords="0-2"></div>
+        <div class="square c8" data-coords="1-2"></div>
+        <div class="square c9" data-coords="2-2"></div>
+    </div>
+    <div id="toolbar-stopped" class="toolbar">
+        <button id="btn-start">Start</button>
+        Choose your sign: <select id="playerUnit">
+        <option value="X">X</option>
+        <option value="O">O</option>
+    </select>
+    </div>
+    <div id="toolbar-playing" class="toolbar" style="display: none;">
+        <button id="btn-reset">Reset</button>
+    </div>
+</script>

@@ -9,10 +9,6 @@ class Game implements MoveInterface
     private $container;
     private static $instance;
 
-    protected function __construct()
-    {
-    }
-
     public static function getInstance()
     {
         if(!isset(self::$instance)) {
@@ -46,7 +42,7 @@ class Game implements MoveInterface
         }
         $boardState = $tmp;
 
-        if ($useIA) {
+        if ($useIA && $training===false) {
             $freePositions = $IA->findFreeCoordinates($boardState);
             $cpuPlayer = $playerUnit == 'X' ? 'O' : 'X';
             $ratings = [];
@@ -62,7 +58,7 @@ class Game implements MoveInterface
                 }
             }
 
-            if ($maxRatingKey !== false && $training===false) {
+            if ($maxRatingKey !== false) {
                 $coords = $freePositions[$maxRatingKey];
             } else {
                 $randKey = rand(0, count($freePositions) -1);

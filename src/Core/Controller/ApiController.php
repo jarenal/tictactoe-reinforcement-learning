@@ -13,7 +13,6 @@ class ApiController extends BaseController
         $game = $this->container->get('game');
         $coords = $game->makeMove($boardState, $humanPlayer, true, false);
         $cpuPlayer = $humanPlayer == 'X' ? 'O' : 'X';
-        $IA->analyzePosition($boardState, [$coords[1], $coords[0]], $cpuPlayer);
         return json_encode(array_merge($coords, [$cpuPlayer]));
     }
 }

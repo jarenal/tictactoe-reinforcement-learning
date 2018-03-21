@@ -68,23 +68,23 @@
                 }
 
                 $(this).addClass('player-'+self.options.playerUnit);
+
+                var winner = self._findWinner();
+                console.log(winner, 'winner');
+                if (winner) {
+                    if (self.options.playerUnit === winner) {
+                        self.options.stats.wins++;
+                        alert('CPU says: Congrats! you was very lucky.');
+                    } else {
+                        self.options.stats.losts++;
+                        alert('CPU says: Too much easy for me.');
+                    }
+                    self._trigger('stopped', null, {});
+                    return false;
+                }
+
                 var totalFreeSquares = self._countFreeSquares();
                 if (totalFreeSquares > 0) {
-
-                    var winner = self._findWinner();
-                    console.log(winner, 'winner');
-                    if (winner) {
-                        if (self.options.playerUnit === winner) {
-                            self.options.stats.wins++;
-                            alert('CPU says: Congrats! you was very lucky.');
-                        } else {
-                            self.options.stats.losts++;
-                            alert('CPU says: Too much easy for me.');
-                        }
-                        self._trigger('stopped', null, {});
-                        return false;
-                    }
-
                     var params = {boardState: self._getBoardState(), player: self.options.playerUnit};
 
                     $.ajax('/api/move', {

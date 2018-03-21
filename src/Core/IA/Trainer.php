@@ -2,49 +2,52 @@
 
 namespace Jarenal\Core\IA;
 
-use Jarenal\Core\Model\Game;
+use Jarenal\Core\Container;
 
 class Trainer
 {
-    private $qTablePath;
     private $games = 100000;
-    private $gamma;
     private $player1 = 'O';
     private $player2 = 'X';
     private $counters = ['X'=>0, 'O'=>0, 'T'=>0];
     private $report = ['X'=>0, 'O'=>0, 'T'=>0];
+    private $container;
 
-    public function __construct(string $qTablePath, $gamma)
+    public function __construct()
     {
-        $this->qTablePath = $qTablePath;
-        $this->gamma = $gamma;
+        $this->container = Container::getInstance();
     }
 
     public function start()
     {
-        $IA = IA::getInstance($this->qTablePath, $this->gamma);
-        $game = Game::getInstance();
+        $IA = $this->container->get('IA');
+        $game = $this->container->get('game');
         for ($i=0; $i < $this->games; $i++) {
+
+            if ($i % 10000 == 0) {
+                $IA->save();
+            }
+
             $boardState = [['','',''],['','',''],['','','']];
-            $free = false;
+
             do {
-                $counter = 0;
+                $coords1 = $game->makeMove($boardState, $this->player2, false, true);
 
-                do {
-                    $coordinates = [rand(0, 2), rand(0, 2)];
-                    if (empty($boardState[$coordinates[0]][$coordinates[1]])) {
-                        $free = true;
-                    } else {
-                        $counter++;
-                    }
-                } while ($free === false && $counter < 100);
+                if($coords1) {
+                    $boardState[$coords1[1]][$coords1[0]] = $this->player1;
+                }
 
-                $boardState[$coordinates[0]][$coordinates[1]] = $this->player1;
+                echo "\n".$this->convertState2Hash($boardState);
+
+                $winner = $game->findWinner($boardState);
+                if ($winner) {
+                    break;
+                }
 
                 if (count($IA->findFreeCoordinates($boardState))) {
-
-                    $coordinates = $game->makeMove($boardState, $this->player1, true, $this->qTablePath, true);
+                    $coordinates = $game->makeMove($boardState, $this->player1, false, true);
                     $coordinates = [$coordinates[1], $coordinates[0]];
+
                     $IA->analyzePosition($boardState, $coordinates, $this->player2);
                     $boardState[$coordinates[0]][$coordinates[1]] = $this->player2;
                 }
@@ -56,12 +59,11 @@ class Trainer
             echo "\nThe winner is $winner";
             $this->counters[$winner]++;
 
-            if ($this->player2 == $winner || $winner == 'T') {
+            if ($this->player2 == $winner) {
                 $IA->updateQTable();
             } else {
                 $IA->resetStates();
             }
-
         }
 
         $this->report['X'] = ($this->counters['X']*100/$this->games);

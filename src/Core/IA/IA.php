@@ -5,7 +5,6 @@ namespace Jarenal\Core\IA;
 class IA
 {
     private $gamma;
-    private $rewards = [];
     private $qTable = [];
     private $qTablePath;
     private static $instance;
@@ -52,6 +51,11 @@ class IA
 
     public function __destruct()
     {
+        $this->save();
+    }
+
+    public function save()
+    {
         $fp = fopen($this->qTablePath, 'w');
 
         foreach ($this->qTable as $hash => $actions) {
@@ -66,24 +70,9 @@ class IA
         $this->qTable = $qTable;
     }
 
-    public function convertState2Hash(array $state, string $cpuPlayer)
+    private function convertState2Hash(array $state, string $cpuPlayer)
     {
         $flat_state = [];
-
-        /*
-        foreach ($state as $row) {
-            foreach ($row as $value) {
-                if ($value) {
-                    if ($cpuPlayer == 'X') {
-                        $flat_state[] = $value=='O' ? '-' : $value;
-                    } else {
-                        $flat_state[] = $value=='X' ? '-' : 'X';
-                    }
-                } else {
-                    $flat_state[] = '-';
-                }
-            }
-        }*/
 
         foreach ($state as $row) {
             foreach ($row as $value) {
@@ -106,7 +95,7 @@ class IA
     {
         $newState = $state;
         $newState[$coordinates[0]][$coordinates[1]] = $cpuPlayer;
-        return $this->ratePosition($newState, $coordinates, $cpuPlayer);
+        return $this->ratePosition($newState, $cpuPlayer);
     }
 
     public function getRatingFromQTable(array $state, array $coordinates, string $cpuPlayer)
@@ -170,14 +159,27 @@ class IA
         $newState = $state;
         $newState[$coordinates[0]][$coordinates[1]] = $cpuPlayer;
         $freeCoordinates = $this->findFreeCoordinates($newState);
-        $nexActions = [];
-        foreach ($freeCoordinates as $coords) {
-            $nextActions[] = $this->getRatingFromQTable($newState, $coords, $cpuPlayer);
+        $nextActions = [];
+        $oponentCoordinates = $freeCoordinates;
+
+        foreach ($freeCoordinates as $cpuCoords) {
+
+            foreach ($oponentCoordinates as $oponentCoords) {
+                $tmpState = $newState;
+
+                if ($cpuCoords === $oponentCoords) {
+                    continue;
+                } else {
+                    $tmpState[$oponentCoords[0]][$oponentCoords[1]] = $cpuPlayer == 'X' ? 'O' : 'X';
+                    $nextActions[] = $this->getRatingFromQTable($tmpState, $cpuCoords, $cpuPlayer);
+                }
+            }
+
         }
 
         // Getting max rating
         $maxRate = 0;
-        foreach ($nexActions as $rate) {
+        foreach ($nextActions as $rate) {
             if ($rate > $maxRate) {
                 $maxRate = $rate;
             }
@@ -212,7 +214,7 @@ class IA
         return (($coordinates[0]*3)+$coordinates[1]+1) - 1;
     }
 
-    public function ratePosition($boardState, $coordinates, $cpuPlayer)
+    public function ratePosition($boardState, $cpuPlayer)
     {
         $lines = [];
         $lines[] = [$boardState[0][0], $boardState[0][1], $boardState[0][2]];
@@ -234,7 +236,6 @@ class IA
         $coordKeys[] = ['00', '11', '22'];
         $coordKeys[] = ['02', '11', '20'];
 
-        // Victory
         foreach ($lines as $line) {
             $playerX = 0;
             $playerO = 0;
@@ -248,67 +249,13 @@ class IA
             }
 
             if ($cpuPlayer == 'X' && $playerX == 3) {
-                return 3;
+                return 1;
             }
 
             if ($cpuPlayer == 'O' && $playerO == 3) {
-                return 3;
+                return 1;
             }
         }
-
-        // Defense
-        foreach ($lines as $key => $line) {
-            $playerX = 0;
-            $playerO = 0;
-
-            foreach ($line as $square) {
-                if ($square == 'X') {
-                    $playerX++;
-                } elseif ($square == 'O') {
-                    $playerO++;
-                }
-            }
-
-            if ($cpuPlayer == 'O' && $playerX == 2 && $playerO == 1) {
-                if (in_array($coordinates[0].$coordinates[1], $coordKeys[$key])) {
-                    return 2;
-                }
-            }
-
-            if ($cpuPlayer == 'X' && $playerO == 2 && $playerX == 1) {
-                if (in_array($coordinates[0].$coordinates[1], $coordKeys[$key])) {
-                    return 2;
-                }
-            }
-        }
-
-        /* Atack
-        foreach ($lines as $key => $line) {
-            $playerX = 0;
-            $playerO = 0;
-
-            foreach ($line as $square) {
-                if ($square == 'X') {
-                    $playerX++;
-                } elseif ($square == 'O') {
-                    $playerO++;
-                }
-            }
-
-            if ($cpuPlayer == 'X' && $playerX == 2 && $playerO == 0) {
-                //echo("\nPartial match: ".$coordinates[0].$coordinates[1]." for line $key --> ".$this->convertState2Hash($boardState,$cpuPlayer));
-                if (in_array($coordinates[0].$coordinates[1], $coordKeys[$key])) {
-                    return 1;
-                }
-            }
-
-            if ($cpuPlayer == 'O' && $playerO == 2 && $playerX == 0) {
-                //echo("\nPartial match: ".$coordinates[0].$coordinates[1]." for line $key --> ".$this->convertState2Hash($boardState,$cpuPlayer));
-                if (in_array($coordinates[0].$coordinates[1], $coordKeys[$key])) {
-                    return 1;
-                }
-            }
-        }*/
 
         return 0;
     }

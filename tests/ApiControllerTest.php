@@ -1,26 +1,24 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use Jarenal\Core\Container;
+use DI\ContainerBuilder;
 
 class ApiControllerTest extends TestCase
 {
+    protected $container;
+
+    public function setUp()
+    {
+        $builder = new ContainerBuilder();
+        $builder->useAnnotations(true);
+        $this->container = $builder->build();
+        parent::setUp();
+    }
+
     public function testMove()
     {
         $_POST['player'] = 'X';
         $_POST['boardState'] = ['a', 'b', 'c'];
-
-        $container = Container::getInstance();
-
-        $IA = $this->getMockBuilder(IA::class)
-            ->setMethods(['analyzePosition'])
-            ->getMock();
-
-        $IA->expects($this->once())
-            ->method('analyzePosition')
-            ->with(['a', 'b', 'c'], [1, 1], 'O');
-
-        $container->set('IA', $IA);
 
         $game = $this->getMockBuilder(Game::class)
             ->setMethods(['makeMove'])
@@ -31,9 +29,9 @@ class ApiControllerTest extends TestCase
             ->with(['a', 'b', 'c'], 'X', true, false)
             ->willReturn([1, 1]);
 
-        $container->set('game', $game);
+        $this->container->set(\Jarenal\Model\Game::class, $game);
 
-        $controller = new \Jarenal\Core\Controller\ApiController($container);
+        $controller = $this->container->get(\Jarenal\Controller\ApiController::class);
 
         $this->assertSame(json_encode([1, 1, 'O']), $controller->move());
     }

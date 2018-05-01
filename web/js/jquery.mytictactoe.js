@@ -74,7 +74,7 @@
                 if (winner) {
                     if (self.options.playerUnit === winner) {
                         self.options.stats.wins++;
-                        alert('CPU says: Congrats! you was very lucky.');
+                        alert('CPU says: Congrats! you were very lucky.');
                     } else {
                         self.options.stats.losts++;
                         alert('CPU says: Too much easy for me.');
@@ -109,7 +109,7 @@
                             if (winner) {
                                 if (self.options.playerUnit === winner) {
                                     self.options.stats.wins++;
-                                    alert('CPU says: Congrats! you was very lucky.');
+                                    alert('CPU says: Congrats! you were very lucky.');
                                 } else {
                                     self.options.stats.losts++;
                                     alert('CPU says: Too much easy for me.');

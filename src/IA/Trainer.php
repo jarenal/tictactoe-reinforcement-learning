@@ -1,37 +1,39 @@
 <?php
 
-namespace Jarenal\Core\IA;
+namespace Jarenal\IA;
 
-use Jarenal\Core\Container;
+use DI\Annotation\Inject;
 
 class Trainer
 {
-    private $games = 100000;
+    private $games = TRAINING_GAMES;
     private $player1 = 'O';
     private $player2 = 'X';
     private $counters = ['X'=>0, 'O'=>0, 'T'=>0];
     private $report = ['X'=>0, 'O'=>0, 'T'=>0];
-    private $container;
 
-    public function __construct()
-    {
-        $this->container = Container::getInstance();
-    }
+    /**
+     * @Inject("Jarenal\IA\IA")
+     */
+    private $ia;
+
+    /**
+     * @Inject("Jarenal\Model\Game")
+     */
+    private $game;
 
     public function start()
     {
-        $IA = $this->container->get('IA');
-        $game = $this->container->get('game');
         for ($i=0; $i < $this->games; $i++) {
 
             if ($i % 10000 == 0) {
-                $IA->save();
+                $this->ia->save();
             }
 
             $boardState = [['','',''],['','',''],['','','']];
 
             do {
-                $coords1 = $game->makeMove($boardState, $this->player2, false, true);
+                $coords1 = $this->game->makeMove($boardState, $this->player2, false);
 
                 if($coords1) {
                     $boardState[$coords1[1]][$coords1[0]] = $this->player1;
@@ -39,30 +41,30 @@ class Trainer
 
                 echo "\n".$this->convertState2Hash($boardState);
 
-                $winner = $game->findWinner($boardState);
+                $winner = $this->game->findWinner($boardState);
                 if ($winner) {
                     break;
                 }
 
-                if (count($IA->findFreeCoordinates($boardState))) {
-                    $coordinates = $game->makeMove($boardState, $this->player1, false, true);
+                if (count($this->ia->findFreeCoordinates($boardState))) {
+                    $coordinates = $this->game->makeMove($boardState, $this->player1, false);
                     $coordinates = [$coordinates[1], $coordinates[0]];
 
-                    $IA->analyzePosition($boardState, $coordinates, $this->player2);
+                    $this->ia->analyzePosition($boardState, $coordinates, $this->player2);
                     $boardState[$coordinates[0]][$coordinates[1]] = $this->player2;
                 }
 
                 echo "\n".$this->convertState2Hash($boardState);
-                $winner = $game->findWinner($boardState);
+                $winner = $this->game->findWinner($boardState);
             } while ($winner === false);
 
             echo "\nThe winner is $winner";
             $this->counters[$winner]++;
 
             if ($this->player2 == $winner) {
-                $IA->updateQTable();
+                $this->ia->updateQTable();
             } else {
-                $IA->resetStates();
+                $this->ia->resetStates();
             }
         }
 

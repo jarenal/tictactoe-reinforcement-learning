@@ -1,16 +1,15 @@
 <?php
-namespace Jarenal\Core\IA;
 
+namespace Jarenal\IA;
 
 class IA
 {
     private $gamma;
     private $qTable = [];
     private $qTablePath;
-    private static $instance;
     private $states = [];
 
-    protected function __construct($qTablePath, $gamma)
+    public function __construct($qTablePath, $gamma)
     {
         $this->qTablePath = $qTablePath;
 
@@ -26,27 +25,6 @@ class IA
         }
 
         $this->gamma = $gamma;
-    }
-
-    public static function getInstance($qTablePath, $gamma)
-    {
-        if(!isset(self::$instance)) {
-            $className = get_called_class();
-            self::$instance = new $className($qTablePath, $gamma);
-        }
-
-        return self::$instance;
-
-    }
-
-    private function __clone()
-    {
-        // Forbidden
-    }
-
-    private function __wakeup()
-    {
-        // Forbidden
     }
 
     public function __destruct()

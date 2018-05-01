@@ -1,40 +1,20 @@
 <?php
 
-namespace Jarenal\Core\Model;
+namespace Jarenal\Model;
 
-use Jarenal\Core\Container;
+use DI\Annotation\Inject;
 
-class Game implements MoveInterface
+class Game
 {
-    private $container;
-    private static $instance;
-
-    public static function getInstance()
+    /**
+     * @Inject("Jarenal\IA\IA")
+     */
+    protected $ia;
+    
+    public function makeMove($boardState, $playerUnit, $useIA = false)
     {
-        if(!isset(self::$instance)) {
-            $className = get_called_class();
-            self::$instance = new $className();
-        }
-
-        return self::$instance;
-    }
-
-    private function __clone()
-    {
-        // Forbidden
-    }
-
-    private function __wakeup()
-    {
-        // Forbidden
-    }
-
-    public function makeMove($boardState, $playerUnit, $useIA = false, $training=false)
-    {
-        $this->container = Container::getInstance();
 
         $tmp = [];
-        $IA = $this->container->get('IA');
         foreach ($boardState as $y => $row) {
             foreach ($row as $x => $cell) {
                 $tmp[$y][$x] = trim($cell, '-');
@@ -42,12 +22,12 @@ class Game implements MoveInterface
         }
         $boardState = $tmp;
 
-        if ($useIA && $training===false) {
-            $freePositions = $IA->findFreeCoordinates($boardState);
+        if ($useIA) {
+            $freePositions = $this->ia->findFreeCoordinates($boardState);
             $cpuPlayer = $playerUnit == 'X' ? 'O' : 'X';
             $ratings = [];
             foreach ($freePositions as $key => $coords) {
-                $ratings[$key] = $IA->getRatingFromQTable($boardState, $coords, $cpuPlayer);
+                $ratings[$key] = $this->ia->getRatingFromQTable($boardState, $coords, $cpuPlayer);
             }
             $maxRatingKey = false;
             $maxRate = 0;

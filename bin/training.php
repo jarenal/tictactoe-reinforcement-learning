@@ -1,10 +1,10 @@
 <?php
 
-require_once "../vendor/autoload.php";
+require_once "../config/config.php";
 
-use Jarenal\Core\IA\Trainer;
+use Jarenal\IA\Trainer;
 
-$trainer = new Trainer();
+$trainer = $container->get(\Jarenal\IA\Trainer::class);
 $report = $trainer->start();
 
 echo "\nGames played: {$report['games']}";

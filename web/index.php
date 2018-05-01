@@ -1,12 +1,11 @@
 <?php
 
-require_once __DIR__."/../vendor/autoload.php";
+require_once __DIR__."/../config/config.php";
 
 if ($_GET['c'] == "api") {
-    $class = "Jarenal\Core\Controller\ApiController";
+    $controller = $container->get(\Jarenal\Controller\ApiController::class);
 } else {
-    $class = "Jarenal\Core\Controller\HomeController";
+    $controller = $container->get(\Jarenal\Controller\HomeController::class);
 }
 
-$app  = new $class;
-die($app->{$_GET['a']}());
+die($controller->{$_GET['a']}());

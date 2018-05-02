@@ -1,6 +1,6 @@
-# Welcome to MyTicTacToe
+# Welcome to TicTacToe Reinforcement Learning on PHP
 
-This is a test project for to try Q-Learn algorithm and machine learning on PHP.
+This is a test project for to try Reinforcement Learning (Q-Learning) and machine learning on PHP
 
 ## Setup
 
@@ -15,7 +15,7 @@ For to run the project in a browser we have two options.
 
 ### Option 1: Using built-in PHP Web Server
 
-For to run **MyTicTacToe** using the built-in PHP Web server:
+For to run the app using the built-in PHP Web server:
 
 Go to **web** folder inside your **PROJECT FOLDER** and then execute the script **start.sh** from your terminal.
 
@@ -34,7 +34,7 @@ http://localhost:8080
 
 ### Option 2: Using Apache
 
-For to run the **MyTicTacToe** using Apache you will have to create a **VirtualHost** pointing to web folder of your project folder.
+For to run the app using Apache you will have to create a **VirtualHost** pointing to web folder of your project folder.
 
 Example:
 
@@ -66,7 +66,7 @@ http://www.example.com
 
 The game use a Machine Learn algorithm called [Q-Learning](https://en.wikipedia.org/wiki/Q-learning)
 
-For to train your MyTicTacToe game you will have to do the next steps:
+For to train the AI you will have to do the next steps:
 
 1. Assign full permissions to **database** folder located inside your project folder.
 2. Enter into **database** folder.
@@ -79,7 +79,7 @@ For to train your MyTicTacToe game you will have to do the next steps:
     $ php training.php
 ```
 
-You can execute the training many times, every time that you execute it the IA should play better.
+You can execute the training many times, every time that you execute it the AI should play better.
 
 For to set how many games will train you can modify the constant **TRAINING_GAMES** located at **config/config.php** file.
 

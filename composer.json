@@ -18,5 +18,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^6"
-    }
+    },
+    "keywords": ["tictactoe", "reinforcement", "learning", "Q-Learning", "machine-learning", "machine", "learning", "AI", "artificial", "intelligence", "game"]
 }
